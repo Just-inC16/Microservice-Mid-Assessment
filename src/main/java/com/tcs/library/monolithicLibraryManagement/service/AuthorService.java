@@ -59,4 +59,10 @@ public class AuthorService {
 	public void deleteAuthor(Long Id) {
 		authorRepository.deleteById(Id);
 	}
+
+	public List<Book> getAllBooksForAuthor(Long Id) {
+		Author authorById = getAuthor(Id);
+		return authorById.getBooks();
+
+	}
 }

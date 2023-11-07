@@ -93,6 +93,13 @@ public class AuthorController {
 
 	}
 
+	@GetMapping("/allBooks/{id}")
+	public ResponseEntity<List<Book>> getAllBooksForAuthor(@PathVariable("id") Long Id) {
+
+		return ResponseEntity.ok(authorService.getAllBooksForAuthor(Id));
+
+	}
+
 	@GetMapping("/hello")
 	void helloWorld() {
 		System.out.println("Hello World");
