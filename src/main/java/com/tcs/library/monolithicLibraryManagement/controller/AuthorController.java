@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tcs.library.monolithicLibraryManagement.entity.Author;
+import com.tcs.library.monolithicLibraryManagement.entity.AuthorBook;
+import com.tcs.library.monolithicLibraryManagement.entity.Book;
 import com.tcs.library.monolithicLibraryManagement.service.AuthorService;
 
 @RestController
@@ -33,25 +35,37 @@ public class AuthorController {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Author> getAuthor(@PathVariable("id") int id) {
+	public ResponseEntity<Author> getAuthor(@PathVariable("id") Long id) {
 		Author authorById = authorService.getAuthor(id);
 		if (authorById == null) {
 			return ResponseEntity.notFound().build();
 		}
 
-//		String name = authorById.getName();
-//		Integer age = authorById.getAge();
-//		Author newAuthor = new Author(id, name, age);
+		String name = authorById.getName();
+		String country = authorById.getCountry();
+		List<Book> books = authorById.getBooks();
+		Author newAuthor = new Author(id, name, country, books);
 //		System.out.println(author);
 //		System.out.println(name);
 //		System.out.println(isbn);
 //		System.out.println(pages);
-		return ResponseEntity.ok(authorById);
+		return ResponseEntity.ok(newAuthor);
 	}
 
+//	@RequestMapping(value = "", method = RequestMethod.POST)
+//	public ResponseEntity<Author> postAuthor(@RequestBody Author author) {
+//
+//		Author savedAuthor = authorService.addAuthor(author);
+//		if (savedAuthor == null) {
+//			return ResponseEntity.notFound().build();
+//		}
+//		return ResponseEntity.ok(savedAuthor);
+//	}
 	@RequestMapping(value = "", method = RequestMethod.POST)
-	public ResponseEntity<Author> postAuthor(@RequestBody Author author) {
-		Author savedAuthor = authorService.addAuthor(author);
+	public ResponseEntity<Author> postAuthor(@RequestBody AuthorBook authorBook) {
+
+		Author savedAuthor = authorService.addAuthor(authorBook);
+		System.out.println(savedAuthor.toString());
 		if (savedAuthor == null) {
 			return ResponseEntity.notFound().build();
 		}
@@ -59,7 +73,7 @@ public class AuthorController {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Author> updateBook(@PathVariable("id") Integer Id, @RequestBody Author author) {
+	public ResponseEntity<Author> updateBook(@PathVariable("id") Long Id, @RequestBody Author author) {
 		Author updateAuthor = authorService.updateAuthor(Id, author);
 		if (updateAuthor == null) {
 			return ResponseEntity.notFound().build();
@@ -68,7 +82,7 @@ public class AuthorController {
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<String> deleteAuthor(@PathVariable("id") int Id) {
+	public ResponseEntity<String> deleteAuthor(@PathVariable("id") Long Id) {
 		try {
 			authorService.deleteAuthor(Id);
 			return ResponseEntity.ok("Successful deletion");
@@ -79,4 +93,8 @@ public class AuthorController {
 
 	}
 
+	@GetMapping("/hello")
+	void helloWorld() {
+		System.out.println("Hello World");
+	}
 }

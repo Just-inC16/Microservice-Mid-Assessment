@@ -13,7 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.tcs.library.monolithicLibraryManagement.entity.Author;
 import com.tcs.library.monolithicLibraryManagement.entity.Book;
+import com.tcs.library.monolithicLibraryManagement.entity.BookStatus;
+import com.tcs.library.monolithicLibraryManagement.service.AuthorService;
 import com.tcs.library.monolithicLibraryManagement.service.BookService;
 
 @RestController
@@ -21,6 +24,7 @@ import com.tcs.library.monolithicLibraryManagement.service.BookService;
 public class BookController {
 
 	public BookService bookService;
+	public AuthorService authorService;
 
 	@Autowired
 	public BookController(BookService bookService) {
@@ -39,12 +43,11 @@ public class BookController {
 		if (bookById == null) {
 			return ResponseEntity.notFound().build();
 		}
-
-//		Integer isbn = bookById.getISBN();
-//		String name = bookById.getName();
-//		String author = bookById.getAuthor();
-//		int pages = bookById.getPages();
-//		Book newBook = new Book(isbn, name, author, pages);
+		String title = bookById.getTitle();
+		String isbn = bookById.getISBN();
+		Author author = bookById.getAuthor();
+		BookStatus status = bookById.getStatus();
+		Book newBook = new Book(Long.valueOf(id), title, isbn, author, status);
 //		System.out.println(author);
 //		System.out.println(name);
 //		System.out.println(isbn);
@@ -52,13 +55,13 @@ public class BookController {
 		return ResponseEntity.ok(bookById);
 	}
 
-	@RequestMapping(value = "", method = RequestMethod.POST)
-	public ResponseEntity<Book> postBook(@RequestBody Book book) {
-		Book savedBook = bookService.addBook(book);
-		if (savedBook == null) {
+	@RequestMapping(value = "/{id}", method = RequestMethod.POST)
+	public ResponseEntity<String> postBook(@PathVariable("id") Long author_id, @RequestBody Book book) {
+		String msg = bookService.addBook(author_id, book);
+		if (msg == null) {
 			return ResponseEntity.notFound().build();
 		}
-		return ResponseEntity.ok(savedBook);
+		return ResponseEntity.ok(msg);
 	}
 
 	@PutMapping("/{id}")
