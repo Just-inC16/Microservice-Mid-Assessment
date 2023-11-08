@@ -38,7 +38,7 @@ public class BookController {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Book> getBook(@PathVariable("id") int id) {
+	public ResponseEntity<Book> getBook(@PathVariable("id") Integer id) {
 		Book bookById = bookService.getBook(id);
 		if (bookById == null) {
 			return ResponseEntity.notFound().build();

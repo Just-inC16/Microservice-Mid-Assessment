@@ -26,7 +26,7 @@ public class BookService {
 		return bookRepository.findAll();
 	}
 
-	public Book getBook(int Id) {
+	public Book getBook(Integer Id) {
 		return bookRepository.getReferenceById(Id);
 	}
 

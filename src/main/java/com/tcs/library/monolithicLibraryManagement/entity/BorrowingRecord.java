@@ -2,6 +2,8 @@ package com.tcs.library.monolithicLibraryManagement.entity;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -15,11 +17,14 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+//@ToString
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class BorrowingRecord {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	@OneToOne
+	@JsonIgnoreProperties("book")
 	private Book book;
 	private LocalDate borrowingDate;
 	private LocalDate returnDate;
