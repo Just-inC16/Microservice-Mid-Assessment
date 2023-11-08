@@ -1,5 +1,6 @@
 package com.tcs.library.monolithicLibraryManagement.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,22 +40,24 @@ public class BorrowingRecordService {
 		Book bookToBorrow = bookService.getBook(Id);
 		bookToBorrow.setStatus(BookStatus.AVAILABLE);
 		bookRepository.save(bookToBorrow);
+
 		// For each borrowed book, delete the record with the matching id
-		List<BorrowingRecord> allBorrowBooks = getAllBorrowingRecords();
+		List<BorrowingRecord> allBorrowBooks = getAllBorrowRecords();
 		for (BorrowingRecord borrowing : allBorrowBooks) {
 			Long currentBookId = borrowing.getBook().getId();
 			if (currentBookId == (long) Id) {
 				borrowingRecordRepository.delete(borrowing);
 			}
 		}
+
 		return "Returned the book";
 	}
 
-	public List<BorrowingRecord> getAllBorrowingRecords() {
+	public List<BorrowingRecord> getAllBorrowRecords() {
 		return borrowingRecordRepository.findAll();
 	}
 
-	public void getBorrowBookByUser(String user) {
+	public List<Book> getBorrowBookByUser(String user) {
 //		System.out.println(user);
 //		for (Book b : borrowingRecordRepository.findBorrowBooksByUser(user)) {
 //			System.out.println(b.getAuthor());
@@ -63,8 +66,17 @@ public class BorrowingRecordService {
 //			System.out.println(b.getStatus());
 //
 //		}
-		System.out.println(borrowingRecordRepository.findBorrowBooksByUser(user).get(0));
+//		System.out.println(borrowingRecordRepository.findBorrowBooksByUser(user).get(0));
 //		System.out.println();
-
+		List<Book> allBookByUser = new ArrayList<Book>();
+		List<BorrowingRecord> allBorrowBooks = getAllBorrowRecords();
+		for (BorrowingRecord borrowing : allBorrowBooks) {
+			String currentUser = borrowing.getUser();
+			Book currentBook = borrowing.getBook();
+			if (currentUser.equals(user)) {
+				allBookByUser.add(currentBook);
+			}
+		}
+		return allBookByUser;
 	}
 }
